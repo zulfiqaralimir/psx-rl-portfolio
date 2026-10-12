@@ -4,6 +4,10 @@ import pandas as pd
 
 CLEAN = r"D:\psx_rl_portfolio\data\clean"
 SPLITS = {"train": ("2013-01-01", "2019-12-31"), "val": ("2020-01-01", "2021-12-31"), "test": ("2022-01-01", "2100-01-01")}
+# Walk-forward windows (expanding train, 2y validation, 2y test), selected with env PSX_WINDOW; default = main split above.
+WINDOWS = {"w1": {"train": ("2013-01-01", "2015-12-31"), "val": ("2016-01-01", "2017-12-31"), "test": ("2018-01-01", "2019-12-31")},
+           "w2": {"train": ("2013-01-01", "2017-12-31"), "val": ("2018-01-01", "2019-12-31"), "test": ("2020-01-01", "2021-12-31")}}
+SPLITS = WINDOWS.get(os.environ.get("PSX_WINDOW"), SPLITS)
 
 
 def load_panel(min_tickers: int = 20):

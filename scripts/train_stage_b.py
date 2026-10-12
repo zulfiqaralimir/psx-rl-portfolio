@@ -1,4 +1,4 @@
-﻿"""Train one (algo, seed). Checkpoint chosen by VALIDATION Sharpe only; test is evaluated once, after training,
+"""Train one (algo, seed). Checkpoint chosen by VALIDATION Sharpe only; test is evaluated once, after training,
 for the selected checkpoint. Usage: python scripts/train_stage_b.py ALGO SEED STEPS"""
 import sys, os, json, time
 sys.path.insert(0, r"D:\psx_rl_portfolio")
@@ -11,7 +11,8 @@ from psx_rl.data import load_panel, load_policy_rate, split_slice
 from psx_rl.gym_env import PSXGymEnv, rollout
 from psx_rl.metrics import metrics
 
-OUT = r"D:\psx_rl_portfolio\results\stageB"
+OUT = os.environ.get("PSX_OUT", r"D:\psx_rl_portfolio\results\stageB")
+COST = float(os.environ.get("PSX_COST", "0.001"))  # Stage C overrides the per-side cost for train, val and test
 EVAL_EVERY = 10_000
 
 
@@ -48,7 +49,7 @@ def main(algo, seed, steps):
     torch.set_num_threads(1)
     os.makedirs(OUT + r"\models", exist_ok=True); os.makedirs(OUT + r"\test_series", exist_ok=True)
     P, listed, _ = load_panel(); policy = load_policy_rate()
-    mk = lambda split: PSXGymEnv(P, listed, split_slice(P.index, split))
+    mk = lambda split: PSXGymEnv(P, listed, split_slice(P.index, split), cost=COST)
     venv = DummyVecEnv([lambda: mk("train")])
     path = rf"{OUT}\models\{algo}_{seed}"
     model = make_model(algo, venv, seed)

@@ -30,4 +30,4 @@ The universe is today's KSE-30 membership applied to all history (2013-2026). KS
 Treat any result as an upper bound, not an estimate of live performance.
 
 ## Benchmark
-Not built yet. Planned: KSE-100 from another source, or an equal-weight basket of these 29 labelled as a proxy.
+Yahoo has no KSE-100 (`^KSE`, `KSE100.KA` and `^KSE100` all return nothing). `data/benchmark_ew_proxy.csv` is an **equal-weight PROXY of the 29 tickers, not the KSE-100**: daily-rebalanced, total-return (`adj_close`), returns over 40% in size treated as missing. It inherits the survivorship bias, so its CAGR (about 25%) is inflated.

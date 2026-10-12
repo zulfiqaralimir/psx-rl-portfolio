@@ -10,7 +10,7 @@ for f in sorted(glob.glob(base+r"\clean\*.csv")):
         m=(r.abs()>.4)&(back.abs()<.15)
         if not m.any(): break
         for i in df.index[m]:
-            removed.append({"ticker":t,**df.loc[i].to_dict(),"ret_in":r[i],"ret_next":df.close.shift(-1)[i]/df.close[i]-1})
+            removed.append({"ticker":t,**df.loc[i].to_dict(),"reason":"spike_reverse","ret_in":r[i],"ret_next":df.close.shift(-1)[i]/df.close[i]-1})
         df=df[~m].reset_index(drop=True)
     r=df.close.pct_change()
     for i in df.index[r.abs()>.4]: unrev.append((t,df.date[i].date(),round(r[i],3)))
@@ -18,3 +18,4 @@ for f in sorted(glob.glob(base+r"\clean\*.csv")):
 out=pd.DataFrame(removed); out["date"]=out.date.dt.strftime("%Y-%m-%d"); out.to_csv(base+r"\removed_rows.csv",index=False)
 print("removed",len(out)); print(out.groupby("ticker").size().to_string())
 print("remaining >40% moves that do NOT revert:",unrev)
+

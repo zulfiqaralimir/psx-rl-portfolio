@@ -17,7 +17,12 @@ ATRL closes on 2025-01-02, 2025-01-20 and 2025-01-31 match the PSX figures (684.
 ## Cleaning
 Rows with volume = 0 are removed: 5,703 of 102,788. 5,287 fall on market-wide holidays (dates where at least 80% of tickers show zero volume; 185 such dates). 416 are illiquid days, mostly SAZEW.
 
-## Known data problems (open)
+## Fixes applied (pipeline: clean_and_audit.py, despike.py, apply_fixes.py, build_ew_proxy.py)
+- `data/removed_rows.csv`: 17 rows dropped as bad prints (1 spike-and-reverse UBL; LUCK 3, UBL 4, SYS 9 scale-glitch rows), with a reason each.
+- `adj_close_fixed` (in `data/clean`): `adj_close` divided by the split ratio for all rows before each break listed in `data/split_events.csv`. Yahoo's `adj_close` does not adjust these breaks. Six events; only PAEL is unverified even against Yahoo; none are verified against PSX (the PSX endpoint is blocked and its company page has no corporate-action table).
+- Only breaks over 30% were treated as splits. Smaller bonus issues (e.g. 10-25%) are covered only to the extent Yahoo's `adj_close` handles them.
+
+## Known data problems (partly superseded by the fixes above)
 - Bad prints in 2025: single-day spikes that revert (e.g. UBL -53%/+98%, SYS -81%/+396%, LUCK -80%/+396%, MARI -89%). They have non-zero volume, so cleaning did not remove them.
 - `adj_close` does not cover all corporate actions: e.g. HUBC 2022-10-11 and NBP 2017-04-06 / 2026-03-17 show close jumps of 17-19% that `adj_close` mostly does not.
 - Series begin on the 2013-01-01 request date for 26 tickers, so first trading days are left-censored. EFERT starts 2014-01-20 and SYS 2015-02-16, probably Yahoo's coverage limit rather than listing date (not verified).
@@ -30,4 +35,4 @@ The universe is today's KSE-30 membership applied to all history (2013-2026). KS
 Treat any result as an upper bound, not an estimate of live performance.
 
 ## Benchmark
-Yahoo has no KSE-100 (`^KSE`, `KSE100.KA` and `^KSE100` all return nothing). `data/benchmark_ew_proxy.csv` is an **equal-weight PROXY of the 29 tickers, not the KSE-100**: daily-rebalanced, total-return (`adj_close`), returns over 40% in size treated as missing. It inherits the survivorship bias, so its CAGR (about 25%) is inflated.
+Yahoo has no KSE-100 (`^KSE`, `KSE100.KA` and `^KSE100` all return nothing). `data/benchmark_ew_proxy.csv` is an **equal-weight PROXY of the 29 tickers, not the KSE-100**: daily-rebalanced, total-return (`adj_close_fixed`), no return-exclusion rule. It inherits the survivorship bias, so its CAGR (about 25.6%) is inflated.

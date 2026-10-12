@@ -1,4 +1,4 @@
-﻿"""Panel loading: 29 tickers, adj_close_fixed, calendar = days with >= 20 tickers having a row."""
+"""Panel loading: 29 tickers, adj_close_fixed, calendar = days with >= 20 tickers having a row."""
 import glob, os
 import pandas as pd
 
@@ -28,3 +28,9 @@ def load_policy_rate() -> pd.Series:
 def split_slice(index: pd.DatetimeIndex, name: str):
     a, b = SPLITS[name]
     return index[(index >= a) & (index <= b)]
+
+
+def load_kse100_close() -> pd.Series:
+    """KSE-100 index close (price index, NO dividends). See scripts/clean_kse100.py."""
+    f = r"D:\psx_rl_portfolio\data\benchmark_kse100.csv"
+    return pd.read_csv(f, parse_dates=["date"]).set_index("date").close

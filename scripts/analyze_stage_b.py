@@ -6,7 +6,7 @@ import sys, glob, json, os
 sys.path.insert(0, r"D:\psx_rl_portfolio")
 import numpy as np, pandas as pd
 from scipy import stats
-from psx_rl.data import load_panel, load_policy_rate, split_slice
+from psx_rl.data import load_panel, load_policy_rate, split_slice, load_kse100_close
 from psx_rl.env import PortfolioEnv
 from psx_rl.metrics import metrics
 from psx_rl import baselines as B
@@ -51,9 +51,7 @@ base = {"buy_and_hold": B.buy_and_hold(mk()), "equal_weight_monthly": B.equal_we
         "mean_variance_monthly": B.mean_variance_monthly(mk(), mv)}
 for k, v in base.items():
     series[k] = daily(v)
-bench = pd.read_csv(r"D:\psx_rl_portfolio\data\benchmark_ew_proxy.csv", parse_dates=["date"]).set_index("date")
-bench = bench[bench.n_tickers >= 20]
-series["ew_proxy_benchmark"] = bench.ew_return.reindex(series["buy_and_hold"].index).dropna()
+series["kse100_benchmark"] = load_kse100_close().reindex(P.index).ffill().pct_change().reindex(series["buy_and_hold"].index).dropna()
 algo_series = {}
 for f in sorted(glob.glob(OUT + r"\test_series\*.csv")):
     name = os.path.basename(f)[:-4]

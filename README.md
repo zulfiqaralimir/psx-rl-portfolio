@@ -65,3 +65,8 @@ The benchmark is the **KSE-100 index** (`data/raw/KSE100.csv`, an Investing.com 
 ## Figures and benchmark update
 - `scripts/make_figures.py` writes `results/figures/test_equity.png` (test-split equity curves incl. KSE-100) and `test_sharpe.png` (test Sharpe with 95% CI over seeds).
 - Stage A and Stage B tables were regenerated with the KSE-100 in place of the proxy. Test Sharpe: KSE-100 0.71 (price only), buy-and-hold 0.91, equal-weight monthly 0.91, mean-variance 0.96. Every Stage B algorithm still shows no significant Sharpe difference against any benchmark (KSE-100: PPO +0.10, A2C +0.15, DDPG -0.01; all p > 0.48). Bootstrap CIs for the other baselines moved in the third decimal because the shared test-day set changed slightly.
+
+## Stage C: cost sensitivity
+- Code: `scripts/run_stage_c_all.py` (driver), `scripts/analyze_stage_c.py`, `scripts/make_figures_c.py`, `scripts/make_tables.py`. Agents are trained, validated and tested at per-side cost 0, 0.25% and 0.5% (0.1% is Stage B); baselines are re-run at the same cost. 90 runs, protocol and hyperparameters as Stage B. Results in `results/stageC/`, tables in `results/tables/`, figure `results/figures/cost_sensitivity_sharpe.png`; summary in `docs/FACTSHEET.md`.
+- Result: no algorithm differs significantly from any baseline at any cost (48 comparisons, min p = 0.052, DDPG vs buy-and-hold at 0.5%). DDPG's mean Sharpe is lowest at 0.5% cost (0.56).
+- The Stage B bootstrap was made deterministic (it iterated a `set` of algorithm names, so draws depended on string-hash order); Stage B CIs moved in the third decimal, point estimates are unchanged.

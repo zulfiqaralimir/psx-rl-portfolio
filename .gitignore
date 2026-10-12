@@ -3,3 +3,11 @@ __pycache__/
 
 results/stageB/models/
 
+results/stageC/*/models/
+results/stageC/*/log_*.txt
+results/walkforward/*/models/
+results/walkforward/*/log_*.txt
+cooldown.log
+stageC_driver.log
+stageC_wait.log
+walkforward_driver.log

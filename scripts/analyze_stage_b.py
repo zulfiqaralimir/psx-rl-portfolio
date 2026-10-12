@@ -11,7 +11,8 @@ from psx_rl.env import PortfolioEnv
 from psx_rl.metrics import metrics
 from psx_rl import baselines as B
 
-OUT = r"D:\psx_rl_portfolio\results\stageB"
+OUT = os.environ.get("PSX_OUT", r"D:\psx_rl_portfolio\results\stageB")
+COST = float(os.environ.get("PSX_COST", "0.001"))  # Stage C: baselines run at the same cost as the agents
 NBOOT, BLOCK = 4000, 20
 rng = np.random.default_rng(12345)
 
@@ -44,7 +45,7 @@ def daily(series):
 
 
 series = {}
-mk = lambda: PortfolioEnv(P, listed, test_dates, cost=0.001)
+mk = lambda: PortfolioEnv(P, listed, test_dates, cost=COST)
 mv = B.fit_mean_variance(P, split_slice(P.index, "train"),
                          policy.reindex(split_slice(P.index, "train").union(policy.index)).ffill().reindex(split_slice(P.index, "train")).mean())
 base = {"buy_and_hold": B.buy_and_hold(mk()), "equal_weight_monthly": B.equal_weight_monthly(mk()),
@@ -85,7 +86,7 @@ for _ in range(NBOOT):
     starts = rng.integers(0, T, nb)
     ix = ((starts[:, None] + np.arange(BLOCK)[None, :]) % T).ravel()[:T]
     sa, sb = sharpe_cols(Ra, ix), sharpe_cols(Rb, ix)
-    for a in set(algo_of):
+    for a in sorted(set(algo_of)):
         cols_a = np.where(algo_of == a)[0]
         pick = rng.choice(cols_a, len(cols_a), replace=True)
         for j, b in enumerate(names_b):

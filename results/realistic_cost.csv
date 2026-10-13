@@ -1,0 +1,4 @@
+scenario,commission_pct,sales_tax,one_way_pct,round_trip_pct
+"low: 0.15% commission, 13% sales tax",0.15,0.13,0.17943583999999996,0.3588716799999999
+"central: 0.15% commission, 15% sales tax",0.15,0.15,0.18250583999999997,0.36501167999999995
+"high: 0.30% commission, 16% sales tax",0.3,0.16,0.35804083999999997,0.7160816799999999

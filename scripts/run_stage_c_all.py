@@ -3,7 +3,7 @@
 import subprocess, os, sys
 from concurrent.futures import ThreadPoolExecutor
 ROOT = r"D:\psx_rl_portfolio\results\stageC"
-COSTS = {"c0": 0.0, "c0025": 0.0025, "c005": 0.005}
+COSTS = {"c0": 0.0, "c0018": 0.0018, "c0025": 0.0025, "c005": 0.005}  # c0018 = realistic PSX/CDC/SECP cost, see data/fee_schedule.csv
 STEPS = 100_000
 jobs = []
 for tag, c in COSTS.items():

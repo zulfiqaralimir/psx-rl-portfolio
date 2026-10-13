@@ -1,13 +1,12 @@
 """Training-length ablation (reviewer 'under-trained'): PPO and A2C, 300,000 steps (steps300k) vs a 100,000-step control (steps100k_control) on the
 SAME patched data, 0.1% cost, same splits, same hyperparameters; checkpoint chosen on validation Sharpe every 10k steps; test evaluated once per run
-(train_stage_b.py records best_step and the validation history in each run's JSON). Seeds are run in two groups, 0-4 then 5-9; the second group is skipped
-if the projected total wall time (2 x the first group's) exceeds 2.5 h. 2 parallel workers. Skips finished runs."""
+(train_stage_b.py records best_step and the validation history in each run's JSON). Seeds 0-4 only (5 seeds, authors' decision to protect the deadline). 2 parallel workers. Skips finished runs."""
 import subprocess, os, sys, time
 from concurrent.futures import ThreadPoolExecutor
 
 ROOT = r"D:\psx_rl_portfolio\results\ablation_steps300k"
 CONFIGS = [("steps300k", 300_000), ("steps100k_control", 100_000)]
-GROUPS = [range(0, 5), range(5, 10)]
+GROUPS = [range(0, 5)]   # 5 seeds (0-4) by decision of the authors, to protect the deadline; add range(5, 10) for 10 seeds
 LIMIT_S = 2.5 * 3600
 for c, _ in CONFIGS:
     os.makedirs(rf"{ROOT}\{c}", exist_ok=True)

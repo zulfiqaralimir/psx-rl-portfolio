@@ -1,0 +1,21 @@
+ticker,date,open,high,low,close,adj_close,volume,adj_close_fixed,reason
+LUCK,2025-04-28,365.0,383.25,355.13,358.88,351.522404,9953480,351.522404,missing day: Yahoo has a zero-volume stale row (or none) on a day PSX traded
+BAFL,2026-04-28,61.4,61.45,60.45,60.71,57.704522,4845211,57.704522,missing day: Yahoo has a zero-volume stale row (or none) on a day PSX traded
+BAFL,2026-04-29,60.9,61.25,59.0,59.5,56.554424,4442038,56.554424,missing day: Yahoo has a zero-volume stale row (or none) on a day PSX traded
+SYS,2025-04-09,499.0,505.0,473.5,486.73,479.164769,534291,95.832954,"restored: dropped as scale glitch, PSX confirms a real day"
+SYS,2025-04-10,500.0,507.0,497.99,502.73,494.916088,375803,98.983218,"restored: dropped as scale glitch, PSX confirms a real day"
+SYS,2025-04-11,508.0,525.0,493.2,508.07,500.173081,797159,100.034616,"restored: dropped as scale glitch, PSX confirms a real day"
+SYS,2025-05-19,544.0,545.0,538.0,539.9,532.791846,106502,106.558369,"restored: dropped as scale glitch, PSX confirms a real day"
+SYS,2025-05-20,539.89,539.89,529.1,531.05,524.058362,90907,104.811672,"restored: dropped as scale glitch, PSX confirms a real day"
+SYS,2025-05-21,530.33,535.88,528.85,531.01,524.01885,538088,104.80377,"restored: dropped as scale glitch, PSX confirms a real day"
+SYS,2025-05-22,540.0,577.0,540.0,559.65,552.281836,763664,110.456367,"restored: dropped as scale glitch, PSX confirms a real day"
+SYS,2025-05-23,562.0,564.99,551.0,554.19,546.893674,196103,109.378735,"restored: dropped as scale glitch, PSX confirms a real day"
+SYS,2025-05-26,559.9,559.9,534.5,537.56,530.482668,300299,106.096534,"restored: dropped as scale glitch, PSX confirms a real day"
+SYS,2025-06-02,108.82,111.72,102.5,103.4,102.038665,5760164,102.038665,missing day: Yahoo has a zero-volume stale row (or none) on a day PSX traded
+SYS,2025-06-16,102.05,103.24,101.7,102.28,100.933413,979688,100.933413,missing day: Yahoo has a zero-volume stale row (or none) on a day PSX traded
+UBL,2025-06-12,516.0,526.99,516.0,520.2,470.893177,965451,235.446589,"restored: dropped as scale glitch, PSX confirms a real day"
+UBL,2025-06-13,510.1,523.5,510.1,517.63,468.566829,1156413,234.283415,"restored: dropped as scale glitch, PSX confirms a real day"
+UBL,2025-06-16,520.0,521.99,514.6,516.46,467.507727,596172,233.753863,missing day: Yahoo has a zero-volume stale row (or none) on a day PSX traded
+UBL,2025-06-19,520.0,522.9,516.02,521.4,471.97947,381538,235.989735,"restored: dropped as scale glitch, PSX confirms a real day"
+UBL,2025-06-20,522.79,525.25,520.0,524.19,474.505064,718562,237.252532,"restored: dropped as scale glitch, PSX confirms a real day"
+UBL,2025-06-23,259.99,265.94,258.5,261.81,236.994545,3805211,236.994545,missing day: Yahoo has a zero-volume stale row (or none) on a day PSX traded

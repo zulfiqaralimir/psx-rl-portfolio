@@ -1,0 +1,3 @@
+ticker,date,open,high,low,close,adj_close,volume,adj_close_fixed,old_adj_close_fixed,old_close,old_volume,rel_change,reason
+SYS,2025-06-17,102.5,106.49,102.25,104.12,102.749187,4519063,102.749187,100.933411,102.27999877929688,979688,0.018,Yahoo row holds another day's data (date shifted)
+UBL,2025-06-17,518.0,532.0,516.5,521.13,471.735058,1375285,235.867529,233.75386,258.2300109863281,1192344,0.009,Yahoo row holds another day's data (date shifted)

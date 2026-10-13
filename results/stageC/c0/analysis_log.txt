@@ -2,21 +2,21 @@
                          0       1      2
 algo                   A2C    DDPG    PPO
 n_seeds                 10      10     10
-annual_return_mean   0.417   0.365  0.375
+annual_return_mean   0.417   0.364  0.375
 annual_return_std    0.081   0.125  0.061
-annual_return_ci_lo  0.359   0.276  0.331
-annual_return_ci_hi  0.475   0.454  0.419
+annual_return_ci_lo  0.359   0.274  0.331
+annual_return_ci_hi  0.475   0.453  0.419
 volatility_mean      0.281   0.268  0.238
 volatility_std       0.013   0.038  0.018
 volatility_ci_lo     0.272   0.241  0.225
 volatility_ci_hi     0.291   0.295  0.251
-sharpe_mean           0.83   0.734  0.815
-sharpe_std           0.204   0.356  0.204
-sharpe_ci_lo         0.684   0.479  0.669
-sharpe_ci_hi         0.976   0.989  0.961
+sharpe_mean           0.83   0.732  0.815
+sharpe_std           0.204   0.358  0.204
+sharpe_ci_lo         0.684   0.476  0.669
+sharpe_ci_hi         0.976   0.988  0.961
 max_drawdown_mean   -0.292  -0.296 -0.263
-max_drawdown_std     0.041   0.082  0.033
-max_drawdown_ci_lo  -0.322  -0.355 -0.286
+max_drawdown_std     0.041   0.082  0.032
+max_drawdown_ci_lo  -0.322  -0.354 -0.286
 max_drawdown_ci_hi  -0.263  -0.238  -0.24
 exposure_mean        0.993   0.989  0.949
 exposure_std         0.004   0.008  0.025
@@ -26,20 +26,20 @@ cash_share_mean      0.007   0.011  0.051
 cash_share_std       0.004   0.008  0.025
 cash_share_ci_lo     0.005   0.006  0.033
 cash_share_ci_hi      0.01   0.017  0.069
-turnover_mean        0.075   7.671  0.794
-turnover_std          0.04   5.259  0.452
-turnover_ci_lo       0.046   3.909   0.47
-turnover_ci_hi       0.103  11.434  1.117
+turnover_mean        0.075   7.691  0.794
+turnover_std          0.04   5.278  0.453
+turnover_ci_lo       0.046   3.916   0.47
+turnover_ci_hi       0.103  11.466  1.117
 algo              baseline  algo_sharpe_mean  baseline_sharpe  sharpe_diff  ci_lo  ci_hi  p_two_sided
  A2C          buy_and_hold             0.830            0.910       -0.080 -0.473  0.259        0.628
  A2C  equal_weight_monthly             0.830            0.910       -0.080 -0.495  0.320        0.648
- A2C      kse100_benchmark             0.830            0.706        0.124 -0.371  0.567        0.631
- A2C mean_variance_monthly             0.830            0.968       -0.138 -0.696  0.371        0.608
-DDPG          buy_and_hold             0.734            0.910       -0.176 -0.570  0.178        0.327
-DDPG  equal_weight_monthly             0.734            0.910       -0.176 -0.524  0.146        0.272
-DDPG      kse100_benchmark             0.734            0.706        0.028 -0.396  0.400        0.937
-DDPG mean_variance_monthly             0.734            0.968       -0.234 -0.839  0.331        0.421
+ A2C      kse100_benchmark             0.830            0.706        0.124 -0.371  0.567        0.630
+ A2C mean_variance_monthly             0.830            0.976       -0.146 -0.705  0.363        0.590
+DDPG          buy_and_hold             0.732            0.910       -0.178 -0.574  0.175        0.324
+DDPG  equal_weight_monthly             0.732            0.910       -0.178 -0.528  0.144        0.267
+DDPG      kse100_benchmark             0.732            0.706        0.026 -0.399  0.400        0.946
+DDPG mean_variance_monthly             0.732            0.976       -0.244 -0.851  0.325        0.408
  PPO          buy_and_hold             0.815            0.910       -0.095 -0.434  0.216        0.538
- PPO  equal_weight_monthly             0.815            0.910       -0.095 -0.414  0.221        0.544
- PPO      kse100_benchmark             0.815            0.706        0.109 -0.194  0.391        0.482
- PPO mean_variance_monthly             0.815            0.968       -0.153 -0.701  0.337        0.583
+ PPO  equal_weight_monthly             0.815            0.910       -0.095 -0.415  0.221        0.544
+ PPO      kse100_benchmark             0.815            0.706        0.109 -0.193  0.392        0.483
+ PPO mean_variance_monthly             0.815            0.976       -0.161 -0.706  0.330        0.566

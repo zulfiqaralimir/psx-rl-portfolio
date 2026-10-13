@@ -30,7 +30,11 @@ for algo, g in R.groupby("algo"):
         x = g[c].to_numpy(); n = len(x)
         m, s = x.mean(), x.std(ddof=1) if n > 1 else np.nan
         h = stats.t.ppf(0.975, n - 1) * s / np.sqrt(n) if n > 1 else np.nan
-        row.update({f"{c[5:]}_mean": m, f"{c[5:]}_std": s, f"{c[5:]}_ci_lo": m - h, f"{c[5:]}_ci_hi": m + h})
+        lo, hi = m - h, m + h
+        if c == "test_turnover":   # percentile bootstrap over seeds (10,000 resamples; own RNG so the other bootstraps are unchanged): cannot go below zero
+            bm = np.random.default_rng(2024).choice(x, (10000, n)).mean(axis=1) if n > 1 else np.array([m])
+            lo, hi = np.percentile(bm, 2.5), np.percentile(bm, 97.5)
+        row.update({f"{c[5:]}_mean": m, f"{c[5:]}_std": s, f"{c[5:]}_ci_lo": lo, f"{c[5:]}_ci_hi": hi})
     rows.append(row)
 summ = pd.DataFrame(rows); summ.to_csv(OUT + r"\stageB_summary.csv", index=False)
 

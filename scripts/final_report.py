@@ -1,4 +1,4 @@
-"""Consolidated final report (facts and tables only) -> docs/FINAL_REPORT.md. Baselines are recomputed on the patched data at 0.1% and 0.18%
+﻿"""Consolidated final report (facts and tables only) -> docs/FINAL_REPORT.md. Baselines are recomputed on the patched data at 0.1% and 0.18%
 (Sharpe 95% CI: circular block bootstrap of test days, block 20, 4000 draws); RL = mean [95% t-interval over 10 seeds] from stageB (0.1%) and stageC/c0018 (0.18%)."""
 import sys
 sys.path.insert(0, r"D:\psx_rl_portfolio")
@@ -35,9 +35,9 @@ def rl_row(s, name):
 
 
 L = ["# Consolidated results (patched data; facts and tables only)", "",
-     "Test split 2022-01-03..2026-10-09. RL cells: mean [95% t-interval over 10 seeds]. Baseline cells: single deterministic run; Sharpe cell has a block-bootstrap 95% interval; the other baseline metrics have no interval.",
-     "RL models were trained before the data patch and re-scored on the patched data without retraining (see section b).", ""]
-for cost, lab, sumfile in [(0.001, "0.1%", R + r"\stageB\stageB_summary.csv"), (0.0018, "0.18% (realistic PSX/CDC/SECP)", R + r"\stageC\c0018\stageB_summary.csv")]:
+     "Test split 2022-01-03..2026-10-09. RL cells: mean [95% t-interval over 10 seeds; turnover: bootstrap percentile interval]. Baseline cells: single deterministic run; Sharpe cell has a block-bootstrap 95% interval; the other baseline metrics have no interval.",
+     "RL models were trained before the data patch and re-scored on the patched data without retraining (see section b). The KSE-100 is a PRICE index (no dividends), so it understates the benchmark; no reliable total-return series was found and none was invented. RL turnover intervals are bootstrap percentile intervals over seeds (10,000 resamples), so they cannot go below zero.", ""]
+for cost, lab, sumfile in [(0.0, "0% (before cost)", R + r"\stageC\c0\stageB_summary.csv"), (0.001, "0.1%", R + r"\stageB\stageB_summary.csv"), (0.0018, "0.18% (realistic PSX/CDC/SECP)", R + r"\stageC\c0018\stageB_summary.csv")]:
     S = pd.read_csv(sumfile).set_index("algo")
     L += [f"## a) Main 29-stock results, {lab} cost per side", "", "| Strategy | Annual return | Volatility | Sharpe | Max drawdown | Turnover/yr |", "|---|---|---|---|---|---|"]
     base = {}
@@ -45,10 +45,11 @@ for cost, lab, sumfile in [(0.001, "0.1%", R + r"\stageB\stageB_summary.csv"), (
         res = fn(PortfolioEnv(P, listed, te, cost=cost)); m = metrics(res, policy); lo, hi = boot_ci(res)
         L.append(f"| {name} | {m['annual_return'] * 100:.1f}% | {m['volatility'] * 100:.1f}% | {m['sharpe']:.2f} [{lo:.2f}, {hi:.2f}] | {m['max_drawdown'] * 100:.1f}% | {m['turnover']:.2f} |")
     a = 1e6 * kse.loc[te] / kse.loc[te[0]]; res = pd.DataFrame({"total_asset": a}); m = metrics(res, policy, turnover=False); lo, hi = boot_ci(res)
-    L.append(f"| KSE-100 (price index) | {m['annual_return'] * 100:.1f}% | {m['volatility'] * 100:.1f}% | {m['sharpe']:.2f} [{lo:.2f}, {hi:.2f}] | {m['max_drawdown'] * 100:.1f}% | n/a |")
+    L.append(f"| KSE-100 (price index, excl. dividends) | {m['annual_return'] * 100:.1f}% | {m['volatility'] * 100:.1f}% | {m['sharpe']:.2f} [{lo:.2f}, {hi:.2f}] | {m['max_drawdown'] * 100:.1f}% | n/a |")
     for algo in ("A2C", "PPO", "DDPG"): L.append(rl_row(S.loc[algo], algo))
-    sig = pd.read_csv((R + r"\stageB" if cost == 0.001 else R + r"\stageC\c0018") + r"\stageB_significance.csv")
+    sig = pd.read_csv((R + r"\stageB" if cost == 0.001 else R + (r"\stageC\c0" if cost == 0.0 else r"\stageC\c0018")) + r"\stageB_significance.csv")
     L += ["", f"Sharpe difference (algorithm minus baseline), circular block bootstrap: smallest p = {sig.p_two_sided.min():.3f}; comparisons with p < 0.05: {(sig.p_two_sided < 0.05).sum()} of {len(sig)}.", ""]
+    if cost == 0.0: L[-2:-1] = [L[-2], "No RL agent significantly beats the baselines even at zero cost (smallest p = 0.27).", ""]
 
 # ---- b) patch effect
 E = pd.read_csv(R + r"\patch_effect.csv")
@@ -64,18 +65,19 @@ L += ["", f"All {len(E)} rows (5 cost levels): max |Sharpe change| = {chg.max():
 S = pd.read_csv(r"D:\psx_rl_portfolio\data\small_breaks.csv")
 fl = S[S.flag.notna()]
 L += ["## c) Small-break scan (`data/small_breaks.csv`)", "",
-      "Scan of all 29 tickers for 5-30% daily close moves, compared with adj_close; run BEFORE the data patch and not re-run after it. Candidates are not corrections: nothing in data/clean was changed because of this scan.", "",
+      "Scan of all 29 tickers for 5-30% daily close moves, compared with adj_close; re-run on the PATCHED data (the pre-patch output is kept as `data/small_breaks_prepatch.csv`). Candidates are not corrections: nothing in data/clean was changed because of this scan.", "",
       f"- Candidates: {len(S)}; adj_close status: " + ", ".join(f"{k} {v}" for k, v in S.adj_close_status.value_counts().items()) + f"; persistent (level shift that stays): {int(S.persistent.sum())}; beyond the empirical daily price limit (7.5% until mid-2024, 10% after): {int(S.beyond_daily_limit.sum())}.",
       f"- Flagged 'CHECK: drop beyond daily limit, not market-wide, adj_close did not (fully) adjust': {len(fl)} rows ({int(fl.persistent.sum())} persistent), in {fl.ticker.nunique()} tickers: " + ", ".join(f"{k} {v}" for k, v in fl.ticker.value_counts().items()) + ".",
-      "- The five split-type breaks (MARI, LUCK, BAFL, SYS, UBL) and PAEL were examined against PSX tables (`data/split_events.csv`, `data/split_verification.csv`); the other flagged rows are unreviewed (status: unverified).", ""]
+      f"- Review status (column review_status): {int((fl.review_status == 'unverified').sum())} of the {len(fl)} flagged rows are unverified; the others lie within 20 days of a split event checked against PSX tables (`data/split_events.csv`: MARI, LUCK, BAFL, SYS, UBL, PAEL). Before the patch: 46 flagged rows in 16 tickers, i.e. the patch changed neither the flagged count nor the tickers (candidates 3,547 -> 3,546).", ""]
 top = fl.assign(a=fl.close_ret.abs()).sort_values("a", ascending=False).head(15)
 L += ["Largest flagged rows:", "", "| Ticker | Date | Close return | adj_close status | Persistent |", "|---|---|---|---|---|"]
 for _, r in top.iterrows(): L.append(f"| {r.ticker} | {r.date} | {r.close_ret * 100:+.1f}% | {r.adj_close_status} | {r.persistent} |")
 L.append("")
 
+KSE = {"kse100_benchmark": "KSE-100 (price index, excl. dividends)"}
 # ---- d) cost sensitivity and walk-forward
 t2 = pd.read_csv(R + r"\tables\table2_sharpe_by_cost.csv"); t4 = pd.read_csv(R + r"\tables\table4_walkforward_sharpe.csv")
-L += ["## d) Cost sensitivity (test Sharpe; RL mean [95% CI over 10 seeds]; patched data)", "", t2.to_markdown(index=False), "",
-      "## d) Walk-forward (0.1% cost; patched data; RL models trained pre-patch and re-scored)", "", t4.to_markdown(index=False), ""]
+L += ["## d) Cost sensitivity (test Sharpe; RL mean [95% CI over 10 seeds]; patched data)", "", t2.rename(columns=KSE).to_markdown(index=False), "",
+      "## d) Walk-forward (0.1% cost; patched data; RL models trained pre-patch and re-scored)", "", t4.rename(columns=KSE).to_markdown(index=False), ""]
 open(r"D:\psx_rl_portfolio\docs\FINAL_REPORT.md", "w", encoding="utf-8").write("\n".join(L))
 print("\n".join(L))

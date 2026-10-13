@@ -24,13 +24,13 @@ Generated from files in this repo. Numbers are test split 2022-01-03..2026-10-09
 | Buy-and-hold | 40.5% | 23.6% | 0.91 | -25.5% | 0.04 |
 | Equal-weight monthly | 40.9% | 24.1% | 0.91 | -25.1% | 0.44 |
 | Mean-variance monthly | 44.1% | 25.0% | 0.97 | -32.3% | 0.45 |
-| KSE-100 (price index) | 31.8% | 20.2% | 0.71 | -22.6% | n/a |
+| KSE-100 (price index, excl. dividends) | 31.8% | 20.2% | 0.71 | -22.6% | n/a |
 | A2C (10-seed mean) | 41.1% | 26.1% | 0.85 | -27.0% | 0.12 |
 | PPO (10-seed mean) | 37.1% | 23.8% | 0.80 | -26.1% | 0.77 |
 | DDPG (10-seed mean) | 35.0% | 25.6% | 0.70 | -28.8% | 7.09 |
 
 ## Cost sensitivity (test Sharpe, RL = mean [95% CI over 10 seeds])
-| Cost/side | A2C | PPO | DDPG | Buy-and-hold | Mean-variance | KSE-100 |
+| Cost/side | A2C | PPO | DDPG | Buy-and-hold | Mean-variance | KSE-100 (price index, excl. dividends) |
 |---|---|---|---|---|---|---|
 | 0% | 0.83 [0.68, 0.98] | 0.82 [0.67, 0.96] | 0.73 [0.48, 0.99] | 0.91 | 0.98 | 0.71 |
 | 0.1% | 0.85 [0.73, 0.98] | 0.80 [0.65, 0.95] | 0.70 [0.50, 0.90] | 0.91 | 0.97 | 0.71 |
@@ -47,7 +47,7 @@ Patch = restored/added/corrected rows for MARI, LUCK, BAFL, SYS, UBL from PSX ta
 ## Walk-forward (0.1% cost, 10 seeds per algorithm per window)
 Windows (`psx_rl/data.py`): w1 train 2013-2015, validation 2016-2017, test 2018-2019; w2 train 2013-2017, validation 2018-2019, test 2020-2021; main split as above. Same protocol, hyperparameters and bootstrap as Stage B. Test Sharpe (RL: mean [95% CI over seeds]):
 
-| Test period | A2C | PPO | DDPG | Buy-and-hold | EW monthly | Mean-variance | KSE-100 |
+| Test period | A2C | PPO | DDPG | Buy-and-hold | EW monthly | Mean-variance | KSE-100 (price index, excl. dividends) |
 |---|---|---|---|---|---|---|---|
 | 2018-2019 | -0.80 [-0.96, -0.64] | -0.82 [-0.97, -0.66] | -0.75 [-0.89, -0.61] | -0.34 | -0.33 | -0.35 | -0.45 |
 | 2020-2021 | -0.06 [-0.20, 0.08] | 0.15 [-0.05, 0.35] | -0.13 [-0.31, 0.05] | 0.30 | 0.16 | 0.08 | -0.12 |

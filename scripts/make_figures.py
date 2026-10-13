@@ -1,4 +1,4 @@
-"""Figures for the test split (2022-01-03..2026-10-09): equity curves and Sharpe with 95% CI. Writes results/figures/*.png."""
+﻿"""Figures for the test split (2022-01-03..2026-10-09): equity curves and Sharpe with 95% CI. Writes results/figures/*.png."""
 import sys, glob, os
 sys.path.insert(0, r"D:\psx_rl_portfolio")
 import numpy as np, pandas as pd, matplotlib
@@ -16,7 +16,7 @@ INK, MUTED, GRID, SURF = "#0b0b0b", "#52514e", "#e1e0d9", "#fcfcfb"
 COL = {"PPO": "#2a78d6", "A2C": "#eb6834", "DDPG": "#1baf7a", "buy_and_hold": "#e87ba4",
        "equal_weight_monthly": "#008300", "mean_variance_monthly": "#6250d6", "kse100_benchmark": INK}
 LAB = {"buy_and_hold": "Buy & hold", "equal_weight_monthly": "EW monthly", "mean_variance_monthly": "Mean-variance",
-       "kse100_benchmark": "KSE-100 (price index)", "PPO": "PPO (10-seed mean)", "A2C": "A2C (10-seed mean)", "DDPG": "DDPG (10-seed mean)"}
+       "kse100_benchmark": "KSE-100 (price index, excl. dividends)", "PPO": "PPO (10-seed mean)", "A2C": "A2C (10-seed mean)", "DDPG": "DDPG (10-seed mean)"}
 
 P, listed, _ = load_panel(); policy = load_policy_rate(); d = split_slice(P.index, "test")
 mk = lambda: PortfolioEnv(P, listed, d, cost=0.001)

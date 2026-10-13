@@ -1,4 +1,4 @@
-"""Walk-forward figure: test Sharpe per test period (2018-19, 2020-21, 2022-26): RL mean with 95% CI over seeds, baselines as markers."""
+﻿"""Walk-forward figure: test Sharpe per test period (2018-19, 2020-21, 2022-26): RL mean with 95% CI over seeds, baselines as markers."""
 import pandas as pd, matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -7,7 +7,7 @@ R = r"D:\psx_rl_portfolio\results"
 s = pd.read_csv(R + r"\walkforward\walkforward_summary.csv"); g = pd.read_csv(R + r"\walkforward\walkforward_significance.csv")
 INK, MUTED, GRID, SURF = "#0b0b0b", "#52514e", "#e1e0d9", "#fcfcfb"
 COL = {"PPO": "#2a78d6", "A2C": "#eb6834", "DDPG": "#1baf7a", "buy_and_hold": "#e87ba4", "equal_weight_monthly": "#008300", "mean_variance_monthly": "#6250d6", "kse100_benchmark": INK}
-LAB = {"buy_and_hold": "Buy & hold", "equal_weight_monthly": "EW monthly", "mean_variance_monthly": "Mean-variance", "kse100_benchmark": "KSE-100 (price)"}
+LAB = {"buy_and_hold": "Buy & hold", "equal_weight_monthly": "EW monthly", "mean_variance_monthly": "Mean-variance", "kse100_benchmark": "KSE-100 (price index, excl. dividends)"}
 MK = {"buy_and_hold": "s", "equal_weight_monthly": "D", "mean_variance_monthly": "^", "kse100_benchmark": "X"}
 periods = list(dict.fromkeys(s.test_period)); xs = {p: i for i, p in enumerate(periods)}
 fig, ax = plt.subplots(figsize=(9, 5.2), facecolor=SURF); ax.set_facecolor(SURF)

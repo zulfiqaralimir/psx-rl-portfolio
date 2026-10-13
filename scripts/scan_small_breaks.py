@@ -1,4 +1,4 @@
-"""Scan data/clean for persistent price breaks of 5-30% in the unadjusted close and compare with Yahoo's adj_close.
+﻿"""Scan data/clean for persistent price breaks of 5-30% in the unadjusted close and compare with Yahoo's adj_close.
 Writes data/small_breaks.csv. Read-only: no price data is changed.
 Columns: close_ret = day-over-day change in close between consecutive rows; adj_ret = same for adj_close;
 absorbed = share of the break that adj_close removed ((close_ret - adj_ret)/close_ret; ~1 = adj_close adjusted it, ~0 = it did not);
@@ -43,6 +43,7 @@ D = pd.DataFrame(rows).sort_values(["date", "ticker"])
 D["beyond_daily_limit"] = D.close_ret.abs() > np.where(pd.to_datetime(D.date) < "2024-07-01", 0.0755, 0.1005)
 D["flag"] = np.where((D.close_ret < 0) & D.beyond_daily_limit & ~D.market_wide & (D.adj_close_status != "adjusted"),
                      "CHECK: drop beyond daily limit, not market-wide, adj_close did not (fully) adjust", "")
+D["review_status"] = np.where(D.near_known_split, "reviewed: near a split event checked against PSX tables (data/split_events.csv)", "unverified")
 D.to_csv(r"D:\psx_rl_portfolio\data\small_breaks.csv", index=False)
 
 print("candidate days with |close return| in [5%, 30%]:", len(D), "across", D.ticker.nunique(), "tickers")

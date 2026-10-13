@@ -1,4 +1,4 @@
-"""Cool-down for long runs: every hour, suspend run_stage_c_all.py and its training workers for 5 minutes, then resume.
+﻿"""Cool-down for long runs: every hour, suspend run_stage_c_all.py and its training workers for 5 minutes, then resume.
 Suspending (not killing) keeps all training progress. Exits when the driver is gone."""
 import time, psutil
 
@@ -7,7 +7,7 @@ RUN_MIN, PAUSE_MIN = 60, 5
 
 def driver():
     for p in psutil.process_iter(["pid", "cmdline"]):
-        if p.info["cmdline"] and any(("run_stage_c_all" in c or "run_walkforward_all" in c or "run_core16_all" in c or "run_ablation_all" in c) for c in p.info["cmdline"]):
+        if p.info["cmdline"] and any(("run_stage_c_all" in c or "run_walkforward_all" in c or "run_core16_all" in c or "run_ablation_all" in c or "run_retrain_all" in c) for c in p.info["cmdline"]):
             return p
 
 
@@ -34,3 +34,4 @@ while True:
         try: p.resume()
         except psutil.Error: pass
     print(time.strftime("%H:%M"), "resumed", flush=True)
+

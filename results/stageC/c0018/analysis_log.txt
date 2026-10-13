@@ -28,8 +28,8 @@ cash_share_ci_lo     0.005  0.003   0.03
 cash_share_ci_hi      0.01  0.011  0.068
 turnover_mean        0.088   3.59  0.764
 turnover_std         0.058   5.66  0.376
-turnover_ci_lo       0.046 -0.459  0.496
-turnover_ci_hi       0.129  7.638  1.033
+turnover_ci_lo       0.057  0.267  0.541
+turnover_ci_hi       0.124  7.097  0.989
 algo              baseline  algo_sharpe_mean  baseline_sharpe  sharpe_diff  ci_lo  ci_hi  p_two_sided
  A2C          buy_and_hold             0.808            0.909       -0.101 -0.437  0.197        0.486
  A2C  equal_weight_monthly             0.808            0.903       -0.095 -0.474  0.274        0.568

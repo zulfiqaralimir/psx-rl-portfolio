@@ -1,0 +1,41 @@
+10 runs, test days 1166, ann 245
+                         0      1
+algo                   A2C    PPO
+n_seeds                  5      5
+annual_return_mean   0.396  0.379
+annual_return_std     0.06  0.047
+annual_return_ci_lo  0.321  0.321
+annual_return_ci_hi  0.471  0.438
+volatility_mean      0.281   0.24
+volatility_std       0.027  0.022
+volatility_ci_lo     0.248  0.213
+volatility_ci_hi     0.314  0.267
+sharpe_mean           0.79  0.825
+sharpe_std           0.193   0.17
+sharpe_ci_lo          0.55  0.614
+sharpe_ci_hi         1.029  1.036
+max_drawdown_mean   -0.291 -0.253
+max_drawdown_std     0.039  0.016
+max_drawdown_ci_lo  -0.339 -0.272
+max_drawdown_ci_hi  -0.243 -0.233
+exposure_mean        0.993  0.946
+exposure_std         0.003  0.038
+exposure_ci_lo        0.99    0.9
+exposure_ci_hi       0.996  0.993
+cash_share_mean      0.007  0.054
+cash_share_std       0.003  0.038
+cash_share_ci_lo     0.004  0.007
+cash_share_ci_hi      0.01    0.1
+turnover_mean        0.191  0.729
+turnover_std         0.232  0.502
+turnover_ci_lo      -0.097  0.106
+turnover_ci_hi       0.479  1.352
+algo              baseline  algo_sharpe_mean  baseline_sharpe  sharpe_diff  ci_lo  ci_hi  p_two_sided
+ A2C          buy_and_hold             0.790            0.909       -0.120 -0.580  0.272        0.554
+ A2C  equal_weight_monthly             0.790            0.906       -0.117 -0.577  0.322        0.560
+ A2C      kse100_benchmark             0.790            0.706        0.084 -0.450  0.576        0.752
+ A2C mean_variance_monthly             0.790            0.971       -0.182 -0.798  0.373        0.560
+ PPO          buy_and_hold             0.825            0.909       -0.084 -0.464  0.256        0.624
+ PPO  equal_weight_monthly             0.825            0.906       -0.081 -0.447  0.246        0.643
+ PPO      kse100_benchmark             0.825            0.706        0.119 -0.278  0.437        0.492
+ PPO mean_variance_monthly             0.825            0.971       -0.146 -0.727  0.377        0.636

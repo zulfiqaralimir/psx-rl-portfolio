@@ -1,0 +1,1 @@
+A2C 0 734s val 0.28 @ 130000 test sharpe 0.77

@@ -65,3 +65,26 @@ Walk-forward covers only two extra windows (2018-19, 2020-21) plus the main spli
 - Tables: `results/tables/` (CSV + `tables.md`).
 - Raw per-run results: `results/stageB/` (0.1%), `results/stageC/<c0|c0025|c005>/`, `results/walkforward/<w1|w2>/`.
 - Regenerate: `scripts/run_stage_a.py`, `scripts/analyze_stage_c.py`, `scripts/make_figures.py`, `scripts/make_figures_c.py`, `scripts/make_tables.py`, `scripts/analyze_walkforward.py`, `scripts/make_figures_wf.py`, `scripts/make_tables_wf.py`.
+
+## Robustness: core-16 universe (0.18% cost, 10 seeds, same protocol)
+Universe = 16 stocks that were KSE-30 members for 100% of 2022-01-03..2026-10-09 (`data/universe_core16.txt`). Test Sharpe (RL mean [95% CI over seeds]) vs the main 29 stocks at 0.18%:
+
+| Universe | A2C | PPO | DDPG | Buy-and-hold | EW monthly | Mean-variance |
+|---|---|---|---|---|---|---|
+| 29 stocks | 0.81 [0.67, 0.94] | 0.83 [0.68, 0.97] | 0.80 [0.63, 0.98] | 0.91 | 0.90 | 0.97 |
+| core-16 | 0.75 [0.60, 0.90] | 0.90 [0.69, 1.11] | 0.66 [0.47, 0.86] | 0.97 | 0.98 | 1.04 |
+
+- 24 comparisons (3 algorithms x 4 baselines x 2 universes): none has p < 0.05. Smallest on core-16: DDPG vs buy-and-hold (diff -0.31, p = 0.056); A2C vs buy-and-hold -0.22, p = 0.072. PPO is the only algorithm above buy-and-hold in point estimate, with a wide interval. Output: `results/robustness_core16/`.
+
+## Training-length ablation (PPO/A2C, 5 seeds 0-4, patched data, 0.1% cost)
+300k steps vs a 100k control trained on the same patched data; checkpoint chosen on validation Sharpe every 10k steps; test evaluated once per run. Seeds limited to 5 (authors' decision, deadline); the driver log's "skipping seeds 5-9" line reflects its time guard, not a failure. Output: `results/ablation_steps300k/` (`comparison.csv`, `checkpoints.csv` with best_step per run, `paired_diff.csv`).
+
+| Config | Algo | Test Sharpe mean [95% CI] | Annual return | Turnover | Median best step | Sharpe diff vs buy-and-hold [95% CI], p |
+|---|---|---|---|---|---|---|
+| 100k control | A2C | 0.79 [0.55, 1.03] | 39.6% | 0.19 | 40k | -0.12 [-0.58, 0.27], 0.55 |
+| 300k | A2C | 0.75 [0.59, 0.92] | 38.7% | 0.16 | 130k | -0.16 [-0.55, 0.20], 0.36 |
+| 100k control | PPO | 0.83 [0.61, 1.04] | 37.9% | 0.73 | 70k | -0.08 [-0.46, 0.26], 0.62 |
+| 300k | PPO | 0.83 [0.58, 1.09] | 39.5% | 0.61 | 100k | -0.08 [-0.50, 0.30], 0.69 |
+
+- Paired by seed (300k minus 100k): PPO Sharpe +0.009 (bootstrap CI -0.07, 0.09), A2C -0.035 (-0.18, 0.07). 300k is better in 1/5 (PPO) and 2/5 (A2C) seeds. No evidence that longer training helps.
+- Chosen checkpoints at 300k (A2C): 10k, 40k, 130k, 130k, 230k; (PPO): 20k, 70k, 100k, 110k, 160k. The main 100k runs were trained before the patch.

@@ -7,7 +7,7 @@ RUN_MIN, PAUSE_MIN = 60, 5
 
 def driver():
     for p in psutil.process_iter(["pid", "cmdline"]):
-        if p.info["cmdline"] and any(("run_stage_c_all" in c or "run_walkforward_all" in c) for c in p.info["cmdline"]):
+        if p.info["cmdline"] and any(("run_stage_c_all" in c or "run_walkforward_all" in c or "run_core16_all" in c) for c in p.info["cmdline"]):
             return p
 
 

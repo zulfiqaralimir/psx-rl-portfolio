@@ -20,7 +20,11 @@ def load_panel(min_tickers: int = 20):
     A = pd.DataFrame(cols).sort_index()
     cal = A.index[A.notna().sum(axis=1) >= min_tickers]
     P = A.ffill().loc[cal]
-    return P, P.notna(), A.loc[cal].notna()
+    traded = A.loc[cal].notna()
+    if os.environ.get("PSX_UNIVERSE") == "core16":  # robustness: always-KSE-30 members; the calendar above still uses all 29 tickers
+        keep = open(r"D:\psx_rl_portfolio\data\universe_core16.txt").read().split()
+        P, traded = P[keep], traded[keep]
+    return P, P.notna(), traded
 
 
 def load_policy_rate() -> pd.Series:

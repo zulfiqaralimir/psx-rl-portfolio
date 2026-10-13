@@ -22,7 +22,7 @@ for a in ("PPO", "A2C", "DDPG"):
     x = d.cost_per_side + off[a]
     ax.errorbar(x, d.sharpe_mean, yerr=[d.sharpe_mean - d.sharpe_ci_lo, d.sharpe_ci_hi - d.sharpe_mean], color=COL[a], marker="o", ms=7,
                 mec=SURF, mew=1.5, lw=1.6, capsize=3, ls="--", label=f"{a} (mean, 95% CI)")
-ax.xaxis.set_major_formatter(PercentFormatter(1.0, decimals=2)); ax.set_xticks([0, 0.001, 0.0025, 0.005])
+ax.xaxis.set_major_formatter(PercentFormatter(1.0, decimals=2)); ax.set_xticks([0, 0.001, 0.0018, 0.0025, 0.005]); ax.tick_params(axis="x", labelsize=8)
 ax.set_xlabel("Transaction cost per side (agents trained and tested at this cost)", color=MUTED); ax.set_ylabel("Test-split Sharpe", color=MUTED)
 ax.set_title("Sharpe vs transaction cost, test 2022-2026", loc="left", color=INK, fontsize=13)
 ax.legend(frameon=False, labelcolor=MUTED, fontsize=9, ncol=2, loc="lower left")

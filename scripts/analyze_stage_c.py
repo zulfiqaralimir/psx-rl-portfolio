@@ -5,7 +5,7 @@ import pandas as pd
 
 ROOT = r"D:\psx_rl_portfolio\results"
 LEVELS = [("0.0%", 0.0, ROOT + r"\stageC\c0"), ("0.1%", 0.001, ROOT + r"\stageB"),
-          ("0.25%", 0.0025, ROOT + r"\stageC\c0025"), ("0.5%", 0.005, ROOT + r"\stageC\c005")]
+          ("0.18%", 0.0018, ROOT + r"\stageC\c0018"), ("0.25%", 0.0025, ROOT + r"\stageC\c0025"), ("0.5%", 0.005, ROOT + r"\stageC\c005")]
 S, G = [], []
 for label, c, out in LEVELS:
     env = dict(os.environ, PSX_OUT=out, PSX_COST=str(c))

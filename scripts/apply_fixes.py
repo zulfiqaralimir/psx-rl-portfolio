@@ -27,4 +27,9 @@ for f in glob.glob(base+r"\clean\*.csv"):
     for tk,d,k,_,_ in EVENTS:
         if tk==t: c.loc[c.date<d,"adj_close_fixed"]=c.adj_close_fixed/k
     c.to_csv(f,index=False)
-pd.DataFrame(EVENTS,columns=["ticker","break_date","ratio","evidence","status"]).to_csv(base+r"\split_events.csv",index=False)
+_ev=pd.DataFrame(EVENTS,columns=["ticker","break_date","ratio","evidence","status"])
+_old=base+r"\split_events.csv"
+if os.path.exists(_old):  # keep columns added later by scripts/verify_splits_vs_psx.py (ex_date, psx_notice_url, ...)
+    _o=pd.read_csv(_old); _x=[c for c in _o.columns if c not in _ev.columns]
+    if _x: _ev=_ev.merge(_o[["ticker"]+_x],on="ticker",how="left")
+_ev.to_csv(_old,index=False)

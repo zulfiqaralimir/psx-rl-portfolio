@@ -1,7 +1,7 @@
-ticker,break_date,ratio,evidence,status
-MARI,2024-09-05,9.0,"price 3641.42->398.97 (9.13x), persists; Yahoo split table 9:1 dated 2024-09-16",yahoo_only
-BAFL,2026-04-09,2.0,"price 121.63->60.21 (2.02x), persists; Yahoo split table 2:1 dated 2026-04-20",yahoo_only
-LUCK,2025-04-10,5.0,"price 1560.98->320.37 (4.87x), persists; Yahoo split table 5:1 dated 2025-04-21",yahoo_only
-SYS,2025-05-27,5.0,"price 543.79->108.82 (5.00x vs last clean row 2025-05-16), persists; Yahoo split table 5:1 dated 2025-05-29",yahoo_only
-UBL,2025-06-10,2.0,"price 513.26->256.52 (2.00x), persists; Yahoo split table 2:1 dated 2025-06-24",yahoo_only
-PAEL,2013-08-29,1.5,"price 15.62->10.42 (1.50x), persists; NO matching Yahoo split record (ratio inferred from price only)",unverified
+ticker,break_date,ratio,evidence,status,ex_date,psx_close_check,psx_notice_url,verification_note
+MARI,2024-09-05,9.0,"price 3641.42->398.97 (9.13x), persists; Yahoo split table 9:1 dated 2024-09-16",psx_closes_verified (notice link pending),2024-09-16,"19 PSX closes 2024-09-02..09-30 vs Yahoo: 12 equal, 7 (09-05..09-13) Yahoo = PSX/9; 0 mismatches",,"Yahoo break date (2024-09-05) is earlier than the ex-date (2024-09-16): Yahoo divided the closes (and multiplied volumes) of 09-05..09-13 by 9 but not 09-04 and earlier, so dividing rows before 09-05 by 9 makes the series continuous (adj_close_fixed 09-04->09-05 = PSX 3641.42->3590.72, -1.39%). Rs 134 dividend ex 2024-09-16 is in adj_close on the ex-date (implied factor 0.96211 = 1-134/3536.83). PSX notice link not yet provided."
+BAFL,2026-04-09,2.0,"price 121.63->60.21 (2.02x), persists; Yahoo split table 2:1 dated 2026-04-20",yahoo_only,,,,
+LUCK,2025-04-10,5.0,"price 1560.98->320.37 (4.87x), persists; Yahoo split table 5:1 dated 2025-04-21",yahoo_only,,,,
+SYS,2025-05-27,5.0,"price 543.79->108.82 (5.00x vs last clean row 2025-05-16), persists; Yahoo split table 5:1 dated 2025-05-29",yahoo_only,,,,
+UBL,2025-06-10,2.0,"price 513.26->256.52 (2.00x), persists; Yahoo split table 2:1 dated 2025-06-24",yahoo_only,,,,
+PAEL,2013-08-29,1.5,"price 15.62->10.42 (1.50x), persists; NO matching Yahoo split record (ratio inferred from price only)",unverified,,,,

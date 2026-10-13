@@ -74,7 +74,7 @@ Universe = 16 stocks that were KSE-30 members for 100% of 2022-01-03..2026-10-09
 | 29 stocks | 0.81 [0.67, 0.94] | 0.83 [0.68, 0.97] | 0.80 [0.63, 0.98] | 0.91 | 0.90 | 0.97 |
 | core-16 | 0.75 [0.60, 0.90] | 0.90 [0.69, 1.11] | 0.66 [0.47, 0.86] | 0.97 | 0.98 | 1.04 |
 
-- 24 comparisons (3 algorithms x 4 baselines x 2 universes): none has p < 0.05. Smallest on core-16: DDPG vs buy-and-hold (diff -0.31, p = 0.056); A2C vs buy-and-hold -0.22, p = 0.072. PPO is the only algorithm above buy-and-hold in point estimate, with a wide interval. Output: `results/robustness_core16/`.
+- 24 comparisons (3 algorithms x 4 baselines x 2 universes): none has p < 0.05. Smallest on core-16: DDPG vs buy-and-hold (diff -0.31, p = 0.056); A2C vs buy-and-hold -0.22, p = 0.072. All three algorithms are below buy-and-hold in point estimate on both universes (core-16: PPO 0.90 vs 0.97, A2C 0.75, DDPG 0.66; 29 stocks: PPO 0.83, A2C 0.81, DDPG 0.80 vs 0.91). PPO has the smallest gap, and its core-16 interval [0.69, 1.11] includes the buy-and-hold value. Output: `results/robustness_core16/`.
 
 ## Training-length ablation (PPO/A2C, 5 seeds 0-4, patched data, 0.1% cost)
 300k steps vs a 100k control trained on the same patched data; checkpoint chosen on validation Sharpe every 10k steps; test evaluated once per run. Seeds limited to 5 (authors' decision, deadline); the driver log's "skipping seeds 5-9" line reflects its time guard, not a failure. Output: `results/ablation_steps300k/` (`comparison.csv`, `checkpoints.csv` with best_step per run, `paired_diff.csv`).

@@ -6,7 +6,8 @@ import sys, glob, os
 import numpy as np, pandas as pd
 
 CHECKS = {"MARI": dict(factor=9.0, ex_date="2024-09-16", div=134.0),   # div = Rs per pre-bonus share, ex on ex_date
-          "LUCK": dict(factor=5.0, ex_date="2025-04-28", div=None)}   # no dividend supplied: only check that adj_close has no jump at ex
+          "LUCK": dict(factor=5.0, ex_date="2025-04-28", div=None),
+          "BAFL": dict(factor=2.0, ex_date="2026-04-20", div=None)}   # no dividend supplied: only check that adj_close has no jump at ex
 out = []
 for t, cfg in CHECKS.items():
     y = pd.read_csv(rf"D:\psx_rl_portfolio\data\raw\{t}.csv", parse_dates=["date"]).set_index("date")
@@ -18,7 +19,8 @@ for t, cfg in CHECKS.items():
         q = r.close / y.close[d]
         v = "equal" if abs(q - 1) < 0.002 else ("Yahoo = PSX/factor" if abs(q / f - 1) < 0.002 else "MISMATCH")
         vq = r.volume / y.volume[d] if y.volume[d] else np.nan
-        out.append(dict(ticker=t, date=d.date(), psx_close=r.close, yahoo_close=round(y.close[d], 4), ratio=round(q, 4), verdict=v,
+        stale = bool(y.volume[d] == 0 and r.volume > 0)   # Yahoo carries a flat zero-volume row on a day PSX traded
+        out.append(dict(ticker=t, date=d.date(), psx_close=r.close, yahoo_close=round(y.close[d], 4), ratio=round(q, 4), verdict=v, yahoo_stale_row=stale,
                         psx_volume=r.volume, yahoo_volume=y.volume[d], volume_ratio=round(vq, 4) if np.isfinite(vq) else np.nan,
                         psx_high=r.high, yahoo_high=round(y.high[d], 4), psx_low=r.low, yahoo_low=round(y.low[d], 4)))
     ex = pd.Timestamp(cfg["ex_date"])
@@ -30,14 +32,16 @@ for t, cfg in CHECKS.items():
     if cfg["div"]: msg += f" vs expected 1 - {cfg['div']}/{pcum} = {1 - cfg['div'] / pcum:.5f}"
     print(msg)
 D = pd.DataFrame(out); D.to_csv(r"D:\psx_rl_portfolio\data\split_verification.csv", index=False)
-print(D.verdict.value_counts().to_string())
-print(D[["ticker", "date", "psx_close", "yahoo_close", "ratio", "verdict", "volume_ratio"]].to_string(index=False))
+print(D.groupby("ticker").verdict.value_counts().to_string()); print("Yahoo stale zero-volume rows on PSX trading days:", D[D.yahoo_stale_row][["ticker", "date"]].astype(str).agg(" ".join, axis=1).tolist())
+print(D[D.ticker == "BAFL"][["ticker", "date", "psx_close", "yahoo_close", "ratio", "verdict", "volume_ratio", "yahoo_stale_row"]].to_string(index=False))
 
 # ---- record the verified facts in data/split_events.csv (extra columns; apply_fixes.py preserves them) ----
 NOTES = {"MARI": dict(ex_date="2024-09-16", psx_close_check="19 PSX closes 2024-09-02..09-30 vs Yahoo: 12 equal, 7 (09-05..09-13) Yahoo = PSX/9; 0 mismatches",
                       psx_notice_url="", verification_note="Yahoo break date (2024-09-05) is earlier than the ex-date (2024-09-16): Yahoo divided the closes (and multiplied volumes) of 09-05..09-13 by 9 but not 09-04 and earlier, so dividing rows before 09-05 by 9 makes the series continuous (adj_close_fixed 09-04->09-05 = PSX 3641.42->3590.72, -1.39%). Rs 134 dividend ex 2024-09-16 is in adj_close on the ex-date (implied factor 0.96211 = 1-134/3536.83). PSX notice link not yet provided.")}
 NOTES["LUCK"] = dict(ex_date="2025-04-28", psx_close_check="15 PSX closes 2025-04-03..04-30 vs Yahoo: 5 equal pre-04-10, 7 (04-10..04-18) Yahoo = PSX/5, 2 equal after; 1 MISMATCH: 2025-04-28 (PSX close 358.88, volume 9,953,480; Yahoo has a stale zero-volume row at 350.29)",
                      psx_notice_url="", verification_note="Factor 5 and ex-date 2025-04-28 (last pre-split close 2025-04-18 = 1,751.45; no trading 04-21..04-25 per user). Yahoo break date (2025-04-10) is earlier than the ex-date: Yahoo divided 04-10..04-18 by 5 but not 04-09 and earlier, so dividing rows before 04-10 by 5 makes the series continuous. adj_close/close factor is constant across 04-18 -> 04-29 (no dividend adjustment at ex). The real 2025-04-28 trading day is missing from our cleaned data (Yahoo's zero-volume stale row was dropped), so the 04-18 -> 04-29 return merges two days (PSX: +2.45% then -2.70%). PSX table source: user-supplied from dps.psx.com.pk, data/psx_tables/LUCK_2025-04.csv; notice link not yet provided.")
+NOTES["BAFL"] = dict(ex_date="2026-04-20", psx_close_check="22 PSX closes 2026-04-01..04-30 vs Yahoo: 6 equal (04-01..04-08), 7 (04-09..04-17) Yahoo = PSX/2, 8 equal after 04-20 (04-28 only by coincidence: Yahoo stale zero-volume row), 1 MISMATCH: 2026-04-29 (PSX 59.50, Yahoo stale 60.71)",
+                     psx_notice_url="", verification_note="Factor 2, last pre-split close 2026-04-17 = 125.34, ex-date 2026-04-20 (user-supplied). Yahoo break date (2026-04-09) is earlier than the ex-date: Yahoo divided 04-09..04-17 by 2 but not 04-08 and earlier, so dividing rows before 04-09 by 2 makes the series continuous. adj_close/close factor is constant across 04-17 -> 04-20 (no dividend adjusted at ex). Yahoo's 04-28/04-29 rows are stale zero-volume copies of the 04-27 close; PSX traded both days (04-28 close 60.71, 4.85M shares; 04-29 close 59.50, 4.44M), and our cleaned data lacks them, so 04-27 -> 04-30 merges three days. PSX table source: user-supplied from dps.psx.com.pk, data/psx_tables/BAFL_2026-04.csv; notice link not yet provided.")
 S = pd.read_csv(r"D:\psx_rl_portfolio\data\split_events.csv")
 for c in ("ex_date", "psx_close_check", "psx_notice_url", "verification_note"):
     if c not in S.columns: S[c] = ""

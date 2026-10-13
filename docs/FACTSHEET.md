@@ -39,11 +39,24 @@ Generated from files in this repo. Numbers are test split 2022-01-03..2026-10-09
 - Significance: 48 algorithm-vs-baseline comparisons (3 algorithms x 4 baselines x 4 cost levels). None has p < 0.05; smallest p = 0.052 (DDPG vs buy-and-hold at 0.5%), next 0.090 (DDPG vs equal-weight monthly at 0.5%). Full table: `results/tables/table3_significance_by_cost.csv`.
 - DDPG turnover: about 7.7/yr at 0% cost, 7.1 at 0.1%, 4.7 at 0.25%, 4.9 at 0.5%. A2C 0.08-0.19/yr, PPO 0.58-0.79/yr.
 
+## Walk-forward (0.1% cost, 10 seeds per algorithm per window)
+Windows (`psx_rl/data.py`): w1 train 2013-2015, validation 2016-2017, test 2018-2019; w2 train 2013-2017, validation 2018-2019, test 2020-2021; main split as above. Same protocol, hyperparameters and bootstrap as Stage B. Test Sharpe (RL: mean [95% CI over seeds]):
+
+| Test period | A2C | PPO | DDPG | Buy-and-hold | EW monthly | Mean-variance | KSE-100 |
+|---|---|---|---|---|---|---|---|
+| 2018-2019 | -0.80 [-0.96, -0.64] | -0.82 [-0.97, -0.66] | -0.75 [-0.89, -0.61] | -0.34 | -0.33 | -0.35 | -0.45 |
+| 2020-2021 | -0.06 [-0.20, 0.08] | 0.15 [-0.05, 0.35] | -0.13 [-0.31, 0.05] | 0.30 | 0.16 | 0.08 | -0.12 |
+| 2022-2026 | 0.85 [0.73, 0.98] | 0.80 [0.65, 0.95] | 0.70 [0.50, 0.89] | 0.91 | 0.91 | 0.96 | 0.71 |
+
+- Mean annual return of the RL algorithms: 2018-2019 A2C -11.1%, PPO -13.5%, DDPG -13.1%; 2020-2021 A2C 3.5%, PPO 9.9%, DDPG 1.3%.
+- Significance: 36 comparisons (3 algorithms x 4 baselines x 3 test periods), no multiple-comparison correction. 3 have p < 0.05, all with the algorithm below the baseline: A2C vs equal-weight monthly 2018-19 (diff -0.47, p = 0.035), A2C vs buy-and-hold 2020-21 (-0.36, p = 0.044), DDPG vs buy-and-hold 2020-21 (-0.43, p = 0.020). No comparison has the algorithm significantly above a baseline. Full table: `results/tables/table5_walkforward_significance.csv`.
+- Figure: `results/figures/walkforward_sharpe.png`.
+
 ## Known limitations (all in README)
-Single test window (walk-forward in `results/walkforward/` if present); survivorship bias; Yahoo-only split adjustments; KSE-100 excludes dividends; the test period is one strongly rising market (baseline CAGR about 40%); 10 seeds, 100k steps, one hyperparameter setting.
+Walk-forward covers only two extra windows (2018-19, 2020-21) plus the main split; survivorship bias; Yahoo-only split adjustments; KSE-100 excludes dividends; the test period is one strongly rising market (baseline CAGR about 40%); 10 seeds, 100k steps, one hyperparameter setting.
 
 ## Files
-- Figures: `results/figures/` (`test_equity.png`, `test_sharpe.png`, `cost_sensitivity_sharpe.png`).
+- Figures: `results/figures/` (`test_equity.png`, `test_sharpe.png`, `cost_sensitivity_sharpe.png`, `walkforward_sharpe.png`).
 - Tables: `results/tables/` (CSV + `tables.md`).
-- Raw per-run results: `results/stageB/` (0.1%), `results/stageC/<c0|c0025|c005>/`.
-- Regenerate: `scripts/run_stage_a.py`, `scripts/analyze_stage_c.py`, `scripts/make_figures.py`, `scripts/make_figures_c.py`, `scripts/make_tables.py`.
+- Raw per-run results: `results/stageB/` (0.1%), `results/stageC/<c0|c0025|c005>/`, `results/walkforward/<w1|w2>/`.
+- Regenerate: `scripts/run_stage_a.py`, `scripts/analyze_stage_c.py`, `scripts/make_figures.py`, `scripts/make_figures_c.py`, `scripts/make_tables.py`, `scripts/analyze_walkforward.py`, `scripts/make_figures_wf.py`, `scripts/make_tables_wf.py`.

@@ -1,0 +1,5 @@
+date,open,high,low,close,adj_close,volume,adj_close_fixed,adj_factor,source
+2025-06-12,516.0,526.99,516.0,520.2,470.893177,965451,235.446589,0.90522,"PSX table (user-supplied, data/psx_tables/UBL_2025-06.csv)"
+2025-06-13,510.1,523.5,510.1,517.63,468.566829,1156413,234.283415,0.90522,"PSX table (user-supplied, data/psx_tables/UBL_2025-06.csv)"
+2025-06-19,520.0,522.9,516.02,521.4,471.97947,381538,235.989735,0.90522,"PSX table (user-supplied, data/psx_tables/UBL_2025-06.csv)"
+2025-06-20,522.79,525.25,520.0,524.19,474.505064,718562,237.252532,0.90522,"PSX table (user-supplied, data/psx_tables/UBL_2025-06.csv)"

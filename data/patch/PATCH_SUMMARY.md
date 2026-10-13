@@ -37,3 +37,7 @@ Only `adj_close_fixed` and row presence feed the pipeline. Expected `adj_close_f
 - ADD 2025-06-20: PSX close 524.19 -> adj_close_fixed 237.2525 (restored: dropped as scale glitch, PSX confirms a real day)
 - ADD 2025-06-23: PSX close 261.81 -> adj_close_fixed 236.9945 (missing day: Yahoo has a zero-volume stale row (or none) on a day PSX traded)
 - REPLACE 2025-06-17: adj_close_fixed 233.7539 -> 235.8675 (+0.90%); Yahoo row holds another day's data (date shifted)
+
+## PAEL (series-level rescale, see rescale.csv)
+- rows 2013-01-01..2013-08-28: adj_close_fixed x 1.05465 (= 0.7031 x 1.5), i.e. factor 0.7031 instead of 1/1.5; PAEL's 2013-08-29 return changes from +0.02% to -5.16% (market median -0.98%; the stock opened at 0.7032 of the previous close and fell 5.2% intraday).
+- 2014-04-22 10% bonus (last cum-bonus close 2014-04-21 = 25.68 KSE raw, KSE open 23.35): NOT applied. Yahoo's PAEL series is already continuous there (open/prev close 1.0066, return -1.8%); the KSE-raw / Yahoo ratio drops from 1.4528 to 1.3123 across the two days, a factor 1.107 = the bonus, so Yahoo's earlier rows already contain it. Multiplying 2013-08-29..2014-04-21 by 0.9091 would create a false +8.0% jump on 2014-04-22.

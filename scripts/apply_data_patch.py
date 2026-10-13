@@ -9,16 +9,21 @@ ROOT = r"D:\psx_rl_portfolio"
 A = pd.read_csv(ROOT + r"\data\patch\additions.csv", parse_dates=["date"])
 R = pd.read_csv(ROOT + r"\data\patch\replacements.csv", parse_dates=["date"])
 COLS = ["date", "open", "high", "low", "close", "adj_close", "volume", "adj_close_fixed"]
+RS_PATH = ROOT + r"\data\patch\rescale.csv"
+RS = pd.read_csv(RS_PATH, parse_dates=["date_from", "date_to"]) if os.path.exists(RS_PATH) else pd.DataFrame(columns=["ticker"])
 
 
 def patched(t):
     c = pd.read_csv(rf"{ROOT}\data\clean\{t}.csv", parse_dates=["date"])
     r = R[R.ticker == t]
     c = c[~c.date.isin(r.date)]
-    return pd.concat([c, r[COLS], A[A.ticker == t][COLS]]).sort_values("date").reset_index(drop=True)
+    c = pd.concat([c, r[COLS], A[A.ticker == t][COLS]]).sort_values("date").reset_index(drop=True)
+    for _, q in RS[RS.ticker == t].iterrows():   # multiply adj_close_fixed over a date range (series-level correction)
+        c.loc[(c.date >= q.date_from) & (c.date <= q.date_to), "adj_close_fixed"] *= q.multiplier
+    return c
 
 
-tickers = sorted(set(A.ticker) | set(R.ticker))
+tickers = sorted(set(A.ticker) | set(R.ticker) | set(RS.ticker))
 tmp = tempfile.mkdtemp()
 for f in os.listdir(ROOT + r"\data\clean"):
     shutil.copy(rf"{ROOT}\data\clean\{f}", tmp)

@@ -49,6 +49,13 @@ A, R, U = pd.DataFrame(add), pd.DataFrame(rep), pd.DataFrame(audit)
 A.to_csv(OUT + r"\additions.csv", index=False); R.to_csv(OUT + r"\replacements.csv", index=False); U.to_csv(OUT + r"\audit_all_psx_dates.csv", index=False)
 pd.DataFrame(extras, columns=["ticker", "date", "note"]).to_csv(OUT + r"\extras_not_in_psx.csv", index=False)
 
+# ---- series-level rescales (not row-level) ----
+# PAEL: adj_close_fixed was adj_close/1.5 before the 2013-08-29 break. The ex-date open / previous close is 0.7032 (Yahoo basis), so the factor should be 0.7031:
+# new = adj_close x 0.7031 = old x (0.7031 x 1.5). The 2014-04-22 10% bonus is NOT applied: Yahoo's series is already continuous there (see PATCH_SUMMARY).
+pd.DataFrame([dict(ticker="PAEL", date_from="2013-01-01", date_to="2013-08-28", multiplier=round(0.7031 * 1.5, 6),
+                   reason="replace the 1/1.5 rescale before the 2013-08-29 break by the ex-date open/prev-close factor 0.7031; makes PAEL's 2013-08-29 return -5.2% (open->close) instead of +0.02%")]
+             ).to_csv(OUT + r"\rescale.csv", index=False)
+
 # ---- summary ----
 L = ["# Data patch (staged, NOT applied)", "", "Built from the PSX tables in `data/psx_tables/` by `scripts/build_data_patch.py`; applied by `scripts/apply_data_patch.py --apply`.",
      "Only `adj_close_fixed` and row presence feed the pipeline. Expected `adj_close_fixed` = PSX close x Yahoo adj factor, divided by the split factor before the ex-date.", "",
@@ -60,6 +67,8 @@ for t in CFG:
     for _, x in a.iterrows(): L.append(f"- ADD {x.date}: PSX close {x.close} -> adj_close_fixed {x.adj_close_fixed:.4f} ({x.reason})")
     for _, x in r_.iterrows(): L.append(f"- REPLACE {x.date}: adj_close_fixed {x.old_adj_close_fixed:.4f} -> {x.adj_close_fixed:.4f} ({x.rel_change:+.2%}); {x.reason}")
     L.append("")
+L += ["## PAEL (series-level rescale, see rescale.csv)", "- rows 2013-01-01..2013-08-28: adj_close_fixed x 1.05465 (= 0.7031 x 1.5), i.e. factor 0.7031 instead of 1/1.5; PAEL's 2013-08-29 return changes from +0.02% to -5.16% (market median -0.98%; the stock opened at 0.7032 of the previous close and fell 5.2% intraday).",
+      "- 2014-04-22 10% bonus (last cum-bonus close 2014-04-21 = 25.68 KSE raw, KSE open 23.35): NOT applied. Yahoo's PAEL series is already continuous there (open/prev close 1.0066, return -1.8%); the KSE-raw / Yahoo ratio drops from 1.4528 to 1.3123 across the two days, a factor 1.107 = the bonus, so Yahoo's earlier rows already contain it. Multiplying 2013-08-29..2014-04-21 by 0.9091 would create a false +8.0% jump on 2014-04-22.", ""]
 if extras: L += ["## Extras", *[f"- {e['ticker']} {e['date']}" for e in extras], ""]
 open(OUT + r"\PATCH_SUMMARY.md", "w", encoding="utf-8").write("\n".join(L))
 print("\n".join(L))

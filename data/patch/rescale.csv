@@ -1,0 +1,2 @@
+ticker,date_from,date_to,multiplier,reason
+PAEL,2013-01-01,2013-08-28,1.05465,replace the 1/1.5 rescale before the 2013-08-29 break by the ex-date open/prev-close factor 0.7031; makes PAEL's 2013-08-29 return -5.2% (open->close) instead of +0.02%

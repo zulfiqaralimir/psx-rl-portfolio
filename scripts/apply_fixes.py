@@ -1,4 +1,5 @@
-﻿"""Run after clean_and_audit.py + despike.py.
+﻿"""WARNING: one-off, superseded. data/split_events.csv is now curated by hand/scripts (extra columns and rows) and data/clean is patched via data/patch; do not rerun.
+Run after clean_and_audit.py + despike.py.
 1) drops reviewed multi-day bad windows (appended to data/removed_rows.csv)
 2) adds adj_close_fixed = adj_close / ratio for rows before each persistent split break
 3) writes data/split_events.csv"""
@@ -32,4 +33,5 @@ _old=base+r"\split_events.csv"
 if os.path.exists(_old):  # keep columns added later by scripts/verify_splits_vs_psx.py (ex_date, psx_notice_url, ...)
     _o=pd.read_csv(_old); _x=[c for c in _o.columns if c not in _ev.columns]
     if _x: _ev=_ev.merge(_o[["ticker"]+_x],on="ticker",how="left")
-_ev.to_csv(_old,index=False)
+if not (os.path.exists(_old) and "ex_date" in pd.read_csv(_old).columns):  # curated file (extra columns, extra rows e.g. the PAEL 2014 bonus): never overwrite
+    _ev.to_csv(_old,index=False)

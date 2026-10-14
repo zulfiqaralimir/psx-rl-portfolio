@@ -20,6 +20,11 @@ def load_panel(min_tickers: int = 20):
     A = pd.DataFrame(cols).sort_index()
     cal = A.index[A.notna().sum(axis=1) >= min_tickers]
     P = A.ffill().loc[cal]
+    if os.environ.get("PSX_ZERO_FLAGGED") == "1":  # sensitivity test: zero the return of each flagged test-period (ticker, day); later returns unchanged
+        sb = pd.read_csv(r"D:\psx_rl_portfolio\data\small_breaks.csv", parse_dates=["date"])
+        for t, d in sb[sb.flag.notna() & (sb.date >= "2022-01-03")][["ticker", "date"]].itertuples(index=False):
+            i = P.index.get_loc(d)
+            P.loc[P.index[i]:, t] *= P[t].iloc[i - 1] / P[t].iloc[i]
     traded = A.loc[cal].notna()
     if os.environ.get("PSX_UNIVERSE") == "core16":  # robustness: always-KSE-30 members; the calendar above still uses all 29 tickers
         keep = open(r"D:\psx_rl_portfolio\data\universe_core16.txt").read().split()

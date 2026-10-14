@@ -87,7 +87,7 @@ for c in sorted(S.cost_per_side.unique()):
     cells += [f"{sh(b[k]['sharpe'])} [{sh(b[k]['lo'])}, {sh(b[k]['hi'])}]" for k in NAMES]
     doc.append(f"| {c * 100:g}% | {'retrained' if c in RETRAINED else 're-scored'} | " + " | ".join(cells) + " |")
 doc += ["", "*Retrained* = agents trained from scratch on the patched data at that cost (seeds 0-9). *Re-scored* = checkpoints trained before the patch, evaluated on the patched test split "
-        "(valid because the patch only changes rows from 2025-04, inside the test split; training and validation data are unchanged). Baselines are recomputed at each cost.", "",
+        "(the price patch changes test-split rows from 2025-04; the PAEL rescale also changes 165 PAEL training rows, 2013-01-01 to 2013-08-28, by +5.5%, which these checkpoints did not see). Baselines are recomputed at each cost.", "",
         sig_line(G, "Significance across all five cost levels"), ""]
 
 # walk-forward
@@ -96,7 +96,7 @@ doc += ["## Table 3: walk-forward test Sharpe (0.1% cost; agents: mean [95% CI o
 for _, r in WF.iterrows():
     doc.append(f"| {r.window} | {r.test_period} | " + " | ".join(r[a] for a in ALGS) + " | " + " | ".join(f"{r[k]:.2f}" for k in NAMES) + " |")
 doc += ["", "Training/validation/test windows: w1 train 2013-2015, validation 2016-2017, test 2018-2019; w2 train 2013-2017, validation 2018-2019, test 2020-2021; main train 2013-2019, validation 2020-2021, test 2022-2026.",
-        "**w1 and w2 were neither retrained nor re-scored after the patch:** they were trained once, before the patch, and the patch changes no row before 2025-04, so their data are identical to the patched data and the results are unaffected. "
+        "**w1 and w2 were neither retrained nor re-scored after the patch.** They were trained before it. The price patch itself changes no row before 2025-04, but the PAEL rescale (factor 0.7031 instead of 1/1.5 before 2013-08-29) changes 165 PAEL rows from 2013-01-01 to 2013-08-28 by +5.5%, which lie inside the training period of both windows, so their training data differ slightly from the current data. "
         "The main row (2022-2026) is the retrained 0.1% agents.", "",
         sig_line(WG, "Significance across the three windows") + " All with p < 0.05 have the agent below the baseline.", ""]
 open(r"D:\psx_rl_portfolio\docs\PAPER_TABLES.md", "w", encoding="utf-8").write("\n".join(doc))

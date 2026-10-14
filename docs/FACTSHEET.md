@@ -44,6 +44,31 @@ Generated from files in this repo. Numbers are test split 2022-01-03..2026-10-09
 ## Effect of the PSX data patch (applied after the 0.18% runs)
 Patch = restored/added/corrected rows for MARI, LUCK, BAFL, SYS, UBL from PSX tables, plus PAEL pre-2013-08-29 rescale 0.7031 (`data/patch/PATCH_SUMMARY.md`; the PAEL 2014 10% bonus is NOT applied). Trained models were re-scored on the patched test data, NOT retrained (valid because the patch changes only the test split, except PAEL pre-2013-08-29 in the training data: the effect of that on trained RL agents is unmeasured). Result: across 60 comparisons, 0 with p < 0.05 before and after; max change in a Sharpe difference 0.0097; baseline Sharpe changes <= 0.0075 (mean-variance +0.0075, buy-and-hold +0.0001, equal-weight +0.0001); RL mean Sharpe changes <= 0.0004. Full before/after: `results/patch_effect.csv`.
 
+## Retrain on patched data at 0.18% cost (30 runs, seeds 0-9) and flagged-days sensitivity
+Full retrain (not re-scoring) on the patched data, same hyperparameters/seeds (`results/retrain_patched/c0018`). Test Sharpe, 10-seed mean vs the earlier re-scored checkpoints (`results/stageC/c0018`):
+
+| Algorithm | Retrained | Re-scored | Change | Buy-and-hold | Diff vs buy-and-hold | p |
+|---|---|---|---|---|---|---|
+| A2C | 0.825 | 0.808 | +0.017 | 0.909 | -0.084 | 0.55 |
+| DDPG | 0.788 | 0.803 | -0.015 | 0.909 | -0.121 | 0.36 |
+| PPO | 0.781 | 0.827 | -0.046 | 0.909 | -0.127 | 0.41 |
+
+- Only PPO changes by more than 0.02. None of the 12 comparisons has p < 0.05, before or after.
+
+Sensitivity to the 13 flagged test-period rows (`flag` set in `data/small_breaks.csv`, date >= 2022-01-03; 0.18% cost, 10 seeds, saved checkpoints re-scored, not retrained). "Zeroed" sets that stock's return on that day to 0 and leaves later returns unchanged (`scripts/sensitivity_flagged.py`, `results/sensitivity_flagged/`):
+
+| Strategy | As is | Zeroed | Change |
+|---|---|---|---|
+| Buy-and-hold | 0.909 | 0.948 | +0.040 |
+| EW monthly | 0.903 | 0.934 | +0.031 |
+| Mean-variance | 0.968 | 0.990 | +0.022 |
+| KSE-100 | 0.706 | 0.706 | 0.000 |
+| PPO | 0.781 | 0.793 | +0.011 |
+| A2C | 0.825 | 0.833 | +0.008 |
+| DDPG | 0.788 | 0.791 | +0.003 |
+
+- No significance change: all 12 p-values stay above 0.05 (smallest 0.24, DDPG vs buy-and-hold, zeroed).
+
 ## Walk-forward (0.1% cost, 10 seeds per algorithm per window)
 Windows (`psx_rl/data.py`): w1 train 2013-2015, validation 2016-2017, test 2018-2019; w2 train 2013-2017, validation 2018-2019, test 2020-2021; main split as above. Same protocol, hyperparameters and bootstrap as Stage B. Test Sharpe (RL: mean [95% CI over seeds]):
 

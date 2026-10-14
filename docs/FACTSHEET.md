@@ -19,27 +19,28 @@ Generated from files in this repo. Numbers are test split 2022-01-03..2026-10-09
 - Significance: Sharpe difference (algo seed-mean minus baseline), circular block bootstrap (block 20 days, 4,000 draws, seeds resampled), two-sided p.
 
 ## Results at 0.1% cost (test)
+Agents retrained on the patched data at 0, 0.1 and 0.18% cost (10 seeds each; `results/retrain_patched/`); 0.25 and 0.5% are saved checkpoints re-scored on the patched test split. Walk-forward main-split row = the retrained 0.1% agents. Retrained vs earlier re-scored Sharpe (10-seed mean): 0% A2C -0.009, DDPG +0.001, PPO +0.003; 0.1% A2C -0.045, DDPG +0.079, PPO -0.020 (re-scored 0.853 / 0.700 / 0.801); no p-value crosses 0.05 at any cost. Paper-ready tables: `docs/PAPER_TABLES.md`.
 | Strategy | Annual return | Volatility | Sharpe | Max drawdown | Turnover/yr |
 |---|---|---|---|---|---|
 | Buy-and-hold | 40.5% | 23.6% | 0.91 | -25.5% | 0.04 |
 | Equal-weight monthly | 40.9% | 24.1% | 0.91 | -25.1% | 0.44 |
 | Mean-variance monthly | 44.1% | 25.0% | 0.97 | -32.3% | 0.45 |
 | KSE-100 (price index, excl. dividends) | 31.8% | 20.2% | 0.71 | -22.6% | n/a |
-| A2C (10-seed mean) | 41.1% | 26.1% | 0.85 | -27.0% | 0.12 |
-| PPO (10-seed mean) | 37.1% | 23.8% | 0.80 | -26.1% | 0.77 |
-| DDPG (10-seed mean) | 35.0% | 25.6% | 0.70 | -28.8% | 7.09 |
+| A2C (10-seed mean) | 40.2% | 27.4% | 0.81 | -28.5% | 0.13 |
+| PPO (10-seed mean) | 36.6% | 24.0% | 0.78 | -26.9% | 0.82 |
+| DDPG (10-seed mean) | 37.5% | 25.7% | 0.78 | -27.7% | 5.51 |
 
 ## Cost sensitivity (test Sharpe, RL = mean [95% CI over 10 seeds])
 | Cost/side | A2C | PPO | DDPG | Buy-and-hold | Mean-variance | KSE-100 (price index, excl. dividends) |
 |---|---|---|---|---|---|---|
-| 0% | 0.83 [0.68, 0.98] | 0.82 [0.67, 0.96] | 0.73 [0.48, 0.99] | 0.91 | 0.98 | 0.71 |
-| 0.1% | 0.85 [0.73, 0.98] | 0.80 [0.65, 0.95] | 0.70 [0.50, 0.90] | 0.91 | 0.97 | 0.71 |
-| 0.18% (realistic PSX/CDC/SECP, `data/fee_schedule.csv`) | 0.81 [0.67, 0.94] | 0.83 [0.68, 0.97] | 0.80 [0.63, 0.98] | 0.91 | 0.97 | 0.71 |
-| 0.25% | 0.77 [0.61, 0.94] | 0.81 [0.69, 0.93] | 0.71 [0.58, 0.83] | 0.91 | 0.97 | 0.71 |
-| 0.5% | 0.78 [0.60, 0.96] | 0.80 [0.65, 0.95] | 0.56 [0.21, 0.91] | 0.91 | 0.96 | 0.71 |
+| 0% (retrained) | 0.82 [0.67, 0.97] | 0.82 [0.67, 0.96] | 0.73 [0.62, 0.84] | 0.91 | 0.98 | 0.71 |
+| 0.1% (retrained) | 0.81 [0.65, 0.97] | 0.78 [0.67, 0.89] | 0.78 [0.66, 0.90] | 0.91 | 0.97 | 0.71 |
+| 0.18% (retrained; realistic PSX/CDC/SECP, `data/fee_schedule.csv`) | 0.82 [0.69, 0.96] | 0.78 [0.64, 0.92] | 0.79 [0.66, 0.91] | 0.91 | 0.97 | 0.71 |
+| 0.25% (re-scored) | 0.77 [0.61, 0.94] | 0.81 [0.69, 0.93] | 0.71 [0.58, 0.83] | 0.91 | 0.97 | 0.71 |
+| 0.5% (re-scored) | 0.78 [0.60, 0.96] | 0.80 [0.65, 0.95] | 0.56 [0.21, 0.91] | 0.91 | 0.96 | 0.71 |
 
 - Significance: 60 algorithm-vs-baseline comparisons (3 algorithms x 4 baselines x 5 cost levels). None has p < 0.05; smallest p = 0.053 (DDPG vs buy-and-hold at 0.5%), next 0.090 (DDPG vs equal-weight monthly at 0.5%). Full table: `results/tables/table3_significance_by_cost.csv`.
-- DDPG turnover: about 7.7/yr at 0% cost, 7.1 at 0.1%, 4.7 at 0.25%, 4.9 at 0.5%. A2C 0.08-0.19/yr, PPO 0.58-0.79/yr.
+- DDPG turnover: about 3.9/yr at 0% cost, 5.5 at 0.1%, 4.9 at 0.18%, 4.7 at 0.25%, 4.9 at 0.5%. A2C 0.08-0.19/yr, PPO 0.58-0.82/yr.
 
 ## Effect of the PSX data patch (applied after the 0.18% runs)
 Patch = restored/added/corrected rows for MARI, LUCK, BAFL, SYS, UBL from PSX tables, plus PAEL pre-2013-08-29 rescale 0.7031 (`data/patch/PATCH_SUMMARY.md`; the PAEL 2014 10% bonus is NOT applied). Trained models were re-scored on the patched test data, NOT retrained (valid because the patch changes only the test split, except PAEL pre-2013-08-29 in the training data: the effect of that on trained RL agents is unmeasured). Result: across 60 comparisons, 0 with p < 0.05 before and after; max change in a Sharpe difference 0.0097; baseline Sharpe changes <= 0.0075 (mean-variance +0.0075, buy-and-hold +0.0001, equal-weight +0.0001); RL mean Sharpe changes <= 0.0004. Full before/after: `results/patch_effect.csv`.
@@ -76,7 +77,7 @@ Windows (`psx_rl/data.py`): w1 train 2013-2015, validation 2016-2017, test 2018-
 |---|---|---|---|---|---|---|---|
 | 2018-2019 | -0.80 [-0.96, -0.64] | -0.82 [-0.97, -0.66] | -0.75 [-0.89, -0.61] | -0.34 | -0.33 | -0.35 | -0.45 |
 | 2020-2021 | -0.06 [-0.20, 0.08] | 0.15 [-0.05, 0.35] | -0.13 [-0.31, 0.05] | 0.30 | 0.16 | 0.08 | -0.12 |
-| 2022-2026 | 0.85 [0.73, 0.98] | 0.80 [0.65, 0.95] | 0.70 [0.50, 0.89] | 0.91 | 0.91 | 0.97 | 0.71 |
+| 2022-2026 | 0.81 [0.65, 0.97] | 0.78 [0.67, 0.89] | 0.78 [0.66, 0.90] | 0.91 | 0.91 | 0.97 | 0.71 |
 
 - Mean annual return of the RL algorithms: 2018-2019 A2C -11.1%, PPO -13.5%, DDPG -13.1%; 2020-2021 A2C 3.5%, PPO 9.9%, DDPG 1.3%.
 - Significance: 36 comparisons (3 algorithms x 4 baselines x 3 test periods), no multiple-comparison correction. 3 have p < 0.05, all with the algorithm below the baseline: A2C vs equal-weight monthly 2018-19 (diff -0.47, p = 0.035), A2C vs buy-and-hold 2020-21 (-0.36, p = 0.044), DDPG vs buy-and-hold 2020-21 (-0.43, p = 0.020). No comparison has the algorithm significantly above a baseline. Full table: `results/tables/table5_walkforward_significance.csv`.

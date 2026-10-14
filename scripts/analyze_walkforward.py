@@ -4,7 +4,7 @@ import os, subprocess, sys
 import pandas as pd
 
 ROOT = r"D:\psx_rl_portfolio\results"
-WINS = [("w1", "2018-2019", ROOT + r"\walkforward\w1"), ("w2", "2020-2021", ROOT + r"\walkforward\w2"), ("main", "2022-2026", ROOT + r"\stageB")]
+WINS = [("w1", "2018-2019", ROOT + r"\walkforward\w1"), ("w2", "2020-2021", ROOT + r"\walkforward\w2"), ("main", "2022-2026", ROOT + r"\retrain_patched\c001")]  # main split: agents retrained on the patched data (patch only touches rows from 2025-04)
 S, G = [], []
 for w, label, out in WINS:
     env = dict(os.environ, PSX_OUT=out, PSX_COST="0.001")

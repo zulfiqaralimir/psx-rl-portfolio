@@ -11,3 +11,6 @@ cooldown.log
 stageC_driver.log
 stageC_wait.log
 walkforward_driver.log
+
+*.log
+*.err

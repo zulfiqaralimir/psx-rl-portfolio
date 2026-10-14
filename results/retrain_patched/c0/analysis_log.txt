@@ -1,0 +1,45 @@
+30 runs, test days 1166, ann 245
+                         0      1      2
+algo                   A2C   DDPG    PPO
+n_seeds                 10     10     10
+annual_return_mean   0.407  0.358  0.379
+annual_return_std    0.079  0.049  0.064
+annual_return_ci_lo   0.35  0.323  0.334
+annual_return_ci_hi  0.463  0.393  0.425
+volatility_mean      0.273  0.254  0.241
+volatility_std       0.016  0.028   0.02
+volatility_ci_lo     0.262  0.234  0.226
+volatility_ci_hi     0.284  0.274  0.255
+sharpe_mean          0.821  0.733  0.818
+sharpe_std           0.211  0.156  0.202
+sharpe_ci_lo          0.67  0.622  0.674
+sharpe_ci_hi         0.972  0.844  0.963
+max_drawdown_mean   -0.294 -0.278 -0.265
+max_drawdown_std     0.044  0.059   0.03
+max_drawdown_ci_lo  -0.326  -0.32 -0.286
+max_drawdown_ci_hi  -0.262 -0.235 -0.244
+exposure_mean        0.993  0.993   0.95
+exposure_std         0.003  0.008  0.025
+exposure_ci_lo       0.991  0.987  0.932
+exposure_ci_hi       0.996  0.998  0.968
+cash_share_mean      0.007  0.007   0.05
+cash_share_std       0.003  0.008  0.025
+cash_share_ci_lo     0.004  0.002  0.032
+cash_share_ci_hi     0.009  0.013  0.068
+turnover_mean        0.109  3.897  0.791
+turnover_std         0.082  6.281  0.463
+turnover_ci_lo       0.066  0.059  0.534
+turnover_ci_hi       0.162  8.086  1.083
+algo              baseline  algo_sharpe_mean  baseline_sharpe  sharpe_diff  ci_lo  ci_hi  p_two_sided
+ A2C          buy_and_hold             0.821            0.910       -0.089 -0.440  0.226        0.552
+ A2C  equal_weight_monthly             0.821            0.910       -0.089 -0.484  0.304        0.614
+ A2C      kse100_benchmark             0.821            0.706        0.115 -0.351  0.542        0.636
+ A2C mean_variance_monthly             0.821            0.976       -0.154 -0.689  0.328        0.554
+DDPG          buy_and_hold             0.733            0.910       -0.177 -0.494  0.091        0.188
+DDPG  equal_weight_monthly             0.733            0.910       -0.177 -0.490  0.099        0.197
+DDPG      kse100_benchmark             0.733            0.706        0.027 -0.349  0.350        0.905
+DDPG mean_variance_monthly             0.733            0.976       -0.243 -0.791  0.267        0.362
+ PPO          buy_and_hold             0.818            0.910       -0.092 -0.445  0.228        0.572
+ PPO  equal_weight_monthly             0.818            0.910       -0.092 -0.423  0.230        0.579
+ PPO      kse100_benchmark             0.818            0.706        0.113 -0.202  0.402        0.476
+ PPO mean_variance_monthly             0.818            0.976       -0.157 -0.739  0.366        0.596
